@@ -1,0 +1,294 @@
+USE [16112018]
+GO
+/****** Object:  Table [dbo].[TBL_Allocation]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_Allocation](
+    [PK_SelectionId] [int] IDENTITY(1,1) NOT NULL,
+    [FK_StdId] [int] NOT NULL,
+    [FK_DegId] [int] NOT NULL,
+    [FK_CourseId] [int] NOT NULL,
+    [SelectionDate] [date] NOT NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[TBL_Course]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_Course](
+    [PK_CourseId] [int] IDENTITY(1,1) NOT NULL,
+    [FK_DegId] [int] NOT NULL,
+    [CourseName] [nvarchar](20) NOT NULL,
+    [IsTheory] [bit] NOT NULL,
+    [IsPractical] [bit] NOT NULL,
+ CONSTRAINT [PK_TBL_Course] PRIMARY KEY CLUSTERED
+(
+    [PK_CourseId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[TBL_Degree]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_Degree](
+    [DegId] [int] IDENTITY(1,1) NOT NULL,
+    [DegreeName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_TBL_Degree] PRIMARY KEY CLUSTERED
+(
+    [DegId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[TBL_Selection]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_Selection](
+    [PK_SelectionId] [int] IDENTITY(1,1) NOT NULL,
+    [FK_StudentId] [int] NOT NULL,
+    [FK_DegreeId] [int] NOT NULL,
+    [FK_CourseId] [int] NOT NULL,
+    [SelectionDate] [nvarchar](50) NOT NULL,
+    [ModifiedDate] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_TBL_Selection] PRIMARY KEY CLUSTERED
+(
+    [PK_SelectionId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[TBL_STD_DEG_COU]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_STD_DEG_COU](
+    [PK_StdCouDeg] [int] IDENTITY(1,1) NOT NULL,
+    [FK_StudentId] [int] NOT NULL,
+    [FK_DegreeId] [int] NOT NULL,
+    [FK_CourseId] [int] NOT NULL,
+    [SelectionDate] [date] NOT NULL,
+    [UpdationDate] [date] NOT NULL,
+ CONSTRAINT [PK_TBL_STD_DEG_COU] PRIMARY KEY CLUSTERED
+(
+    [PK_StdCouDeg] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[TBL_StudentDetails]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_StudentDetails](
+    [PK_UserId] [int] IDENTITY(1,1) NOT NULL,
+    [StudentName] [nvarchar](20) NOT NULL,
+    [Age] [int] NOT NULL,
+    [Address] [nvarchar](60) NOT NULL,
+    [Mobile] [nvarchar](20) NOT NULL,
+    [Password] [varchar](8) NOT NULL,
+    [CreatedBy] [nvarchar](20) NOT NULL,
+ CONSTRAINT [PK_TBL_StudentDetails] PRIMARY KEY CLUSTERED
+(
+    [PK_UserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+ALTER TABLE [dbo].[TBL_Allocation]  WITH CHECK ADD  CONSTRAINT [FK_TBL_Allocation_TBL_Course] FOREIGN KEY([FK_CourseId])
+REFERENCES [dbo].[TBL_Course] ([PK_CourseId])
+GO
+ALTER TABLE [dbo].[TBL_Allocation] CHECK CONSTRAINT [FK_TBL_Allocation_TBL_Course]
+GO
+ALTER TABLE [dbo].[TBL_Allocation]  WITH CHECK ADD  CONSTRAINT [FK_TBL_Allocation_TBL_Degree] FOREIGN KEY([FK_DegId])
+REFERENCES [dbo].[TBL_Degree] ([DegId])
+GO
+ALTER TABLE [dbo].[TBL_Allocation] CHECK CONSTRAINT [FK_TBL_Allocation_TBL_Degree]
+GO
+ALTER TABLE [dbo].[TBL_Allocation]  WITH CHECK ADD  CONSTRAINT [FK_TBL_Allocation_TBL_StudentDetails] FOREIGN KEY([FK_StdId])
+REFERENCES [dbo].[TBL_StudentDetails] ([PK_UserId])
+GO
+ALTER TABLE [dbo].[TBL_Allocation] CHECK CONSTRAINT [FK_TBL_Allocation_TBL_StudentDetails]
+GO
+ALTER TABLE [dbo].[TBL_Course]  WITH CHECK ADD  CONSTRAINT [FK_TBL_Course_TBL_Degree] FOREIGN KEY([FK_DegId])
+REFERENCES [dbo].[TBL_Degree] ([DegId])
+GO
+ALTER TABLE [dbo].[TBL_Course] CHECK CONSTRAINT [FK_TBL_Course_TBL_Degree]
+GO
+ALTER TABLE [dbo].[TBL_Selection]  WITH CHECK ADD  CONSTRAINT [FK_TBL_Selection_TBL_Course1] FOREIGN KEY([FK_CourseId])
+REFERENCES [dbo].[TBL_Course] ([PK_CourseId])
+GO
+ALTER TABLE [dbo].[TBL_Selection] CHECK CONSTRAINT [FK_TBL_Selection_TBL_Course1]
+GO
+ALTER TABLE [dbo].[TBL_Selection]  WITH CHECK ADD  CONSTRAINT [FK_TBL_Selection_TBL_Degree1] FOREIGN KEY([FK_DegreeId])
+REFERENCES [dbo].[TBL_Degree] ([DegId])
+GO
+ALTER TABLE [dbo].[TBL_Selection] CHECK CONSTRAINT [FK_TBL_Selection_TBL_Degree1]
+GO
+ALTER TABLE [dbo].[TBL_Selection]  WITH CHECK ADD  CONSTRAINT [FK_TBL_Selection_TBL_StudentDetails1] FOREIGN KEY([FK_StudentId])
+REFERENCES [dbo].[TBL_StudentDetails] ([PK_UserId])
+GO
+ALTER TABLE [dbo].[TBL_Selection] CHECK CONSTRAINT [FK_TBL_Selection_TBL_StudentDetails1]
+GO
+ALTER TABLE [dbo].[TBL_STD_DEG_COU]  WITH CHECK ADD  CONSTRAINT [FK_TBL_STD_DEG_COU_TBL_Course] FOREIGN KEY([FK_CourseId])
+REFERENCES [dbo].[TBL_Course] ([PK_CourseId])
+GO
+ALTER TABLE [dbo].[TBL_STD_DEG_COU] CHECK CONSTRAINT [FK_TBL_STD_DEG_COU_TBL_Course]
+GO
+ALTER TABLE [dbo].[TBL_STD_DEG_COU]  WITH CHECK ADD  CONSTRAINT [FK_TBL_STD_DEG_COU_TBL_Degree] FOREIGN KEY([FK_DegreeId])
+REFERENCES [dbo].[TBL_Degree] ([DegId])
+GO
+ALTER TABLE [dbo].[TBL_STD_DEG_COU] CHECK CONSTRAINT [FK_TBL_STD_DEG_COU_TBL_Degree]
+GO
+ALTER TABLE [dbo].[TBL_STD_DEG_COU]  WITH CHECK ADD  CONSTRAINT [FK_TBL_STD_DEG_COU_TBL_StudentDetails] FOREIGN KEY([FK_StudentId])
+REFERENCES [dbo].[TBL_StudentDetails] ([PK_UserId])
+GO
+ALTER TABLE [dbo].[TBL_STD_DEG_COU] CHECK CONSTRAINT [FK_TBL_STD_DEG_COU_TBL_StudentDetails]
+GO
+/****** Object:  StoredProcedure [dbo].[Fetch_Course]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[Fetch_Course]
+@Degreeid int
+as
+begin
+select pk_courseId,FK_Degid,CourseName,IsTheory,IsPractical from TBL_Course  where FK_Degid=@Degreeid
+end
+GO
+/****** Object:  StoredProcedure [dbo].[SP_InsertRecords] Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[SP_InsertRecords]
+@studentId int,
+@degreeId int,
+@courseId int,
+@selectiondate nvarchar(50),
+@modifieddate nvarchar(50)
+as
+begin
+set nocount on;
+if not exists (select * from TBL_Allocation where FK_StdId=@studentId and FK_CourseId=@courseId)
+begin
+
+insert into tbl_selection
+(FK_StudentId, FK_DegreeId, FK_CourseId, SelectionDate, ModifiedDate)
+values
+(@studentId,@degreeId,@courseId,@selectiondate,@modifieddate)
+--select 'data save' as result
+end
+else
+begin
+select 'data allready exist' as result
+end
+end
+GO
+/****** Object:  StoredProcedure [dbo].[StudentPersonal]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[StudentPersonal]
+@uid int
+as
+begin
+select * from TBL_StudentDetails
+where PK_UserId=@uid
+end
+GO
+/****** Object:  StoredProcedure [dbo].[StudentRecordUpdate] Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[StudentRecordUpdate]
+(
+@userid int,
+@username nvarchar(50),
+@age int,
+@address varchar(100),
+@mobile nvarchar(10)
+)
+as
+begin
+select * from TBL_StudentDetails
+update TBL_StudentDetails
+set StudentName=@username,
+Age=@age,
+Address=@address,
+Mobile=@mobile
+ where PK_UserId=@userid
+end
+GO
+/****** Object:  StoredProcedure [dbo].[USP_DEGREE_FETCH] Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[USP_DEGREE_FETCH]
+as
+begin
+select DegId,DegreeName from TBL_Degree
+end
+GO
+/****** Object:  StoredProcedure [dbo].[USP_GridView]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[USP_GridView]
+@Degreeid int
+as begin
+select FK_DegId,d.DegreeName,PK_CourseId,CourseName,IsTheory,IsPractical from TBL_Course C
+join TBL_Degree D on c.FK_DegId=d.DegId where c.FK_DegId=@Degreeid end
+GO
+/****** Object:  StoredProcedure [dbo].[USP_Login]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[USP_Login]
+@userid int
+as
+
+begin
+set nocount on
+select count (*) from tbl_studentDetails where PK_UserId=@userid
+--select PK_UserId,StudentName,Age,Address,Mobile from tbl_studentDetails
+--where PK_UserId=@userid
+end
+GO
+/****** Object:  StoredProcedure [dbo].[USP_STUDENT_REGISTRAION]    Script Date: 20-11-2018 15:38:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[USP_STUDENT_REGISTRAION]
+(
+@username nvarchar(50),
+@age nvarchar(50),
+@address nvarchar(100),
+@mobile nvarchar(12),
+@password varchar(10),
+@createdby nvarchar(50)
+)
+as
+
+begin
+    insert into tbl_studentDetails(StudentName, Age, Address, Mobile, Password, CreatedBy)
+    Values(@username,@age,@address,@mobile,@password,@createdby)
+end
+GO 
